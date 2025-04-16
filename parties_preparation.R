@@ -114,7 +114,7 @@ print(dimension_coverage)
 
 #### Subset data -------------------------------------------------------------
 ## Subset
-core_vars <- c("deregulation", "immigrate_policy", "multiculturalism", "redistribution", "spendvtax")
+core_vars <- c("immigrate_policy", "redistribution", "eu_position")
 
 df_core <- df_ches %>%
   filter(if_all(all_of(core_vars), ~ !is.na(.))) %>%
