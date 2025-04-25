@@ -60,7 +60,7 @@ df_voteshares <- read_csv("df_voteshares.csv")
 
 
 
-#### Colors for plot -----------------------------------------------------
+#### Formatting plots -----------------------------------------------------
 # Define a more representative color palette based on party family associations
 custom_colors <- c("Radical right" = "#FF5733",        # Red
                    "Christian democracy" = "#4682B4", # Blue
@@ -69,22 +69,22 @@ custom_colors <- c("Radical right" = "#FF5733",        # Red
                    "Other" = "#D3D3D3",              # Light gray
                    "Conservative" = "#006400",       # Dark green
                    "Liberal" = "#8A2BE2",            # Purple
-                   "Green/Ecologist" = "#00FF7",    # Green
+                   "Green/Ecologist" = "#00FF00",    # Green
                    "Agrarian" = "#FFD700")           # Gold (for Agrarian)
-
+# Define global consistent order for party families
+family_order <- c("Christian democracy", "Conservative", "Liberal", 
+                  "Social democracy", "Communist/Socialist", "Green/Ecologist", 
+                  "Radical right", "Agrarian", "Other")
 
 
 #### Plotting vote shares  ----------------------------------------------
 ## Netherlands
 # Subset data
 nl_data <- subset(df_voteshares, country_name == "Netherlands" & election_year >= 1950)
-nl_data$family_name <- factor(nl_data$family_name)
-levels(nl_data$family_name)
 nl_data <- subset(nl_data, family_name != "no family" & family_name != "Special issue")
-# Reorder the family_name factor to place "Agrarian party" at the bottom
-nl_data$family_name <- factor(nl_data$family_name, 
-                                  levels = c("Agrarian party", setdiff(unique(nl_data$family_name), "Agrarian party")))
-# Create the stacked area plot
+nl_data$family_name <- factor(nl_data$family_name, levels = family_order)
+
+# Plot
 ggplot(nl_data, aes(x = election_year, y = vote_share_rel, fill = family_name)) +
   geom_area() +
   scale_fill_manual(values = custom_colors) +
@@ -93,4 +93,39 @@ ggplot(nl_data, aes(x = election_year, y = vote_share_rel, fill = family_name)) 
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   coord_cartesian(ylim = c(0, 100))
+
+
+## Denmark
+# Subset data
+dk_data <- subset(df_voteshares, country_name == "Denmark" & election_year >= 1950)
+dk_data <- subset(dk_data, family_name != "no family" & family_name != "Special issue")
+dk_data$family_name <- factor(dk_data$family_name, levels = family_order)
+
+# Plot
+ggplot(dk_data, aes(x = election_year, y = vote_share_rel, fill = family_name)) +
+  geom_area() +
+  scale_fill_manual(values = custom_colors) +
+  labs(title = "Vote Share by Party Family in Denmark (Excluding 'Other')",
+       x = "Election Year", y = "Relative Vote Share (%)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  coord_cartesian(ylim = c(0, 100))
+
+## Germany
+# Subset data
+de_data <- subset(df_voteshares, country_name == "Germany" & election_year >= 1950)
+de_data <- subset(de_data, family_name != "no family" & family_name != "Special issue")
+de_data$family_name <- factor(de_data$family_name, levels = family_order)
+
+# Plot
+ggplot(de_data, aes(x = election_year, y = vote_share_rel, fill = family_name)) +
+  geom_area() +
+  scale_fill_manual(values = custom_colors) +
+  labs(title = "Vote Share by Party Family in Germany (Excluding 'Other')",
+       x = "Election Year", y = "Relative Vote Share (%)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  coord_cartesian(ylim = c(0, 100))
+
+
 
